@@ -7,8 +7,14 @@ const validateRequestBody = (requestBody, requestBodyPathsToSanitize, res) => {
     let input = requestBody
     requestBodyPathToSanitize.split('.')
     .forEach((p) => { input = input[p]; });
+    if (typeof input === "object") {
+      // Absolute path must be provided to the actual value, assume something funny is going on if this is an object
+      result['shouldThrowError'] = true
+      return result
+    }
     if (mongoDBNoSQLMatch(input)) {
       result['shouldThrowError'] = true
+      return result
     }
   }
   return result
@@ -19,6 +25,7 @@ const validateGenericParam = (param, paramsToSanitize) => {
   for (paramToSanitize of paramsToSanitize) {
     if (mongoDBNoSQLMatch(param[paramToSanitize])) {
       result['shouldThrowError'] = true
+      return result
     }
   }
   return result
