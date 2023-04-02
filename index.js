@@ -1,5 +1,6 @@
 const express = require('express')
 const { mongoDBNoSQLMatch } = require('./DetectionFunction')
+const spawner = require('node:child_process').spawn;
 
 const validateRequestBody = (requestBody, requestBodyPathsToSanitize, res) => {
   const result =  {}
@@ -20,10 +21,18 @@ const validateRequestBody = (requestBody, requestBodyPathsToSanitize, res) => {
   return result
 }
 
+const validateWithLRModel = ( input ) =>{
+  // returns 1 or 0 
+  const python_process = spawner('python', ['./identify.py', JSON.stringify( input )])
+  python_process.stdout.on('data', (data) =>{
+    return data
+  });
+}
+
 const validateGenericParam = (param, paramsToSanitize) => {
   const result = {}
   for (paramToSanitize of paramsToSanitize) {
-    if (mongoDBNoSQLMatch(param[paramToSanitize])) {
+    if ( validateWithLRModel(param[paramToSanitize]) && mongoDBNoSQLMatch(param[paramToSanitize])) {
       result['shouldThrowError'] = true
       return result
     }
