@@ -13,7 +13,7 @@ const validateRequestBody = (requestBody, requestBodyPathsToSanitize, res) => {
       result['shouldThrowError'] = true
       return result
     }
-    if (validateWithLRModel(input) && mongoDBNoSQLMatch(input)) {
+    if (validateWithLRModel(input) || mongoDBNoSQLMatch(input)) {
       result['shouldThrowError'] = true
       return result
     }
@@ -32,7 +32,7 @@ const validateWithLRModel = ( input ) =>{
 const validateGenericParam = (param, paramsToSanitize) => {
   const result = {}
   for (paramToSanitize of paramsToSanitize) {
-    if ( validateWithLRModel(param[paramToSanitize]) && mongoDBNoSQLMatch(param[paramToSanitize])) {
+    if ( validateWithLRModel(param[paramToSanitize]) || mongoDBNoSQLMatch(param[paramToSanitize])) {
       result['shouldThrowError'] = true
       return result
     }
