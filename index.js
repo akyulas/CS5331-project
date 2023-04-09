@@ -22,6 +22,7 @@ const validateRequestBody = (requestBody, requestBodyPathsToSanitize, res) => {
 }
 
 const validateWithLRModel = ( input ) =>{
+  console.log("validating with LR Model")
   // returns 1 or 0 
   const python_process = spawner('python', ['./identify.py', JSON.stringify( input )])
   python_process.stdout.on('data', (data) =>{

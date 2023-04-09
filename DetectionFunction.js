@@ -1,4 +1,5 @@
 const mongoDBNoSQLMatch = (input) => {
+  console.log("validating with Mongo DB NOSQL Match")
   dangerousMongoDBNoSQLChars = ['$', '{', '&&', '||']
   dangerousRegex = [/sleep\([0-9]+\)/gm]
   return dangerousMongoDBNoSQLChars
