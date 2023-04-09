@@ -61,28 +61,28 @@ const injectionSanitizer = (args = {}) => {
         shouldThrowError: shouldThrowErrorAfterValidatingHeaders = false
       } = validateGenericParam(requestHeaders, headersToSanitize, res)
       if (shouldThrowErrorAfterValidatingHeaders) {
-        return res.sendStatus(500)
+        return res.status(400).send("Dangerous input detected")
       }
 
       const {
         shouldThrowError: shouldThrowErrorAfterValidatingRequestBody = false
       } = validateRequestBody(requestBody, requestBodyPathsToSanitize, res)
       if (shouldThrowErrorAfterValidatingRequestBody) {
-        return res.sendStatus(500)
+        return res.status(400).send("Dangerous input detected")
       }
 
       const {
         shouldThrowError: shouldThrowErrorAfterValidatingRequestParams = false
       } = validateGenericParam(requestParams, requestParamsToSanitize, res)
       if (shouldThrowErrorAfterValidatingRequestParams) {
-        return res.sendStatus(500)
+        return res.status(400).send("Dangerous input detected")
       }
 
       const {
         shouldThrowError: shouldThrowErrorAfterValidatingQueryParams = false
       } = validateGenericParam(queryParams,queryParamsToSanitize, res)
       if (shouldThrowErrorAfterValidatingQueryParams) {
-        return res.sendStatus(500)
+        return res.status(400).send("Dangerous input detected")
       }
 
       next()
