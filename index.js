@@ -13,7 +13,7 @@ const validateRequestBody = (requestBody, requestBodyPathsToSanitize, res) => {
       result['shouldThrowError'] = true
       return result
     }
-    if (mongoDBNoSQLMatch(input)) {
+    if (validateWithLRModel(input) && mongoDBNoSQLMatch(input)) {
       result['shouldThrowError'] = true
       return result
     }
