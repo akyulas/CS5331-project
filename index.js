@@ -40,7 +40,7 @@ const validateGenericParam = (param, paramsToSanitize) => {
   return result
 }
 
-const injectionSanitizer = (args = {}) => {
+const injectionFireWallMiddleware = (args = {}) => {
   const {
     headersToSanitize = [],
     requestBodyPathsToSanitize = [],
@@ -90,4 +90,4 @@ const injectionSanitizer = (args = {}) => {
   }
 }
 
-module.exports = injectionSanitizer
+module.exports = injectionFireWallMiddleware
