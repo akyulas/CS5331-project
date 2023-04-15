@@ -1,5 +1,5 @@
 const express = require('express')
-const { mongoDBNoSQLMatch } = require('./DetectionFunction')
+const { mongoDBNoSQLMatch, sqlInjectionMatch } = require('./DetectionFunction')
 const spawner = require('node:child_process').spawn;
 
 const validateRequestBody = (requestBody, requestBodyPathsToSanitize, res) => {
@@ -13,7 +13,7 @@ const validateRequestBody = (requestBody, requestBodyPathsToSanitize, res) => {
       result['shouldThrowError'] = true
       return result
     }
-    if (validateWithLRModel(input) || mongoDBNoSQLMatch(input)) {
+    if (validateWithLRModel(input) || mongoDBNoSQLMatch(input) || sqlInjectionMatch(input)) {
       result['shouldThrowError'] = true
       return result
     }
@@ -33,7 +33,7 @@ const validateWithLRModel = ( input ) =>{
 const validateGenericParam = (param, paramsToSanitize) => {
   const result = {}
   for (paramToSanitize of paramsToSanitize) {
-    if ( validateWithLRModel(param[paramToSanitize]) || mongoDBNoSQLMatch(param[paramToSanitize])) {
+    if ( validateWithLRModel(param[paramToSanitize]) || mongoDBNoSQLMatch(param[paramToSanitize]) || sqlInjectionMatch(param[paramToSanitize])) {
       result['shouldThrowError'] = true
       return result
     }

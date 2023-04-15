@@ -9,4 +9,11 @@ const mongoDBNoSQLMatch = (input) => {
   .some(possiblyDangerousInput => input.match(possiblyDangerousInput))
 }
 
-module.exports = { mongoDBNoSQLMatch }
+const sqlInjectionMatch = (input) => {
+  console.log("validating with SQL Match")
+  dangerousSQLInectionChars = ['SELECT', 'UNION', '--']
+  return dangerousSQLInectionChars
+  .some(possiblyDangerousInput => input.toUpperCase().includes(possiblyDangerousInput))
+}
+
+module.exports = { mongoDBNoSQLMatch, sqlInjectionMatch }
