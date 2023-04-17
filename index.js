@@ -1,5 +1,5 @@
 const express = require('express')
-const { mongoDBNoSQLMatch } = require('./DetectionFunction')
+const { mongoDBNoSQLMatch, sqlInjectionMatch } = require('./DetectionFunction')
 const spawner = require('node:child_process').spawn;
 
 const validateRequestBody = (requestBody, requestBodyPathsToSanitize, res) => {
@@ -9,11 +9,12 @@ const validateRequestBody = (requestBody, requestBodyPathsToSanitize, res) => {
     requestBodyPathToSanitize.split('.')
     .forEach((p) => { input = input[p]; });
     if (typeof input === "object") {
+      console.log("Detecting a javascript object. Possibly a dangerous input. Rejecting this.")
       // Absolute path must be provided to the actual value, assume something funny is going on if this is an object
       result['shouldThrowError'] = true
       return result
     }
-    if (mongoDBNoSQLMatch(input)) {
+    if (validateWithLRModel(input) || mongoDBNoSQLMatch(input) || sqlInjectionMatch(input)) {
       result['shouldThrowError'] = true
       return result
     }
@@ -22,6 +23,7 @@ const validateRequestBody = (requestBody, requestBodyPathsToSanitize, res) => {
 }
 
 const validateWithLRModel = ( input ) =>{
+  console.log("validating with LR Model")
   // returns 1 or 0 
   const python_process = spawner('python', ['./identify.py', JSON.stringify( input )])
   python_process.stdout.on('data', (data) =>{
@@ -32,7 +34,7 @@ const validateWithLRModel = ( input ) =>{
 const validateGenericParam = (param, paramsToSanitize) => {
   const result = {}
   for (paramToSanitize of paramsToSanitize) {
-    if ( validateWithLRModel(param[paramToSanitize]) && mongoDBNoSQLMatch(param[paramToSanitize])) {
+    if ( validateWithLRModel(param[paramToSanitize]) || mongoDBNoSQLMatch(param[paramToSanitize]) || sqlInjectionMatch(param[paramToSanitize])) {
       result['shouldThrowError'] = true
       return result
     }
@@ -40,7 +42,7 @@ const validateGenericParam = (param, paramsToSanitize) => {
   return result
 }
 
-const injectionSanitizer = (args = {}) => {
+const injectionFireWallMiddleware = (args = {}) => {
   const {
     headersToSanitize = [],
     requestBodyPathsToSanitize = [],
@@ -61,28 +63,28 @@ const injectionSanitizer = (args = {}) => {
         shouldThrowError: shouldThrowErrorAfterValidatingHeaders = false
       } = validateGenericParam(requestHeaders, headersToSanitize, res)
       if (shouldThrowErrorAfterValidatingHeaders) {
-        return res.sendStatus(500)
+        return res.status(400).send("Dangerous input detected")
       }
 
       const {
         shouldThrowError: shouldThrowErrorAfterValidatingRequestBody = false
       } = validateRequestBody(requestBody, requestBodyPathsToSanitize, res)
       if (shouldThrowErrorAfterValidatingRequestBody) {
-        return res.sendStatus(500)
+        return res.status(400).send("Dangerous input detected")
       }
 
       const {
         shouldThrowError: shouldThrowErrorAfterValidatingRequestParams = false
       } = validateGenericParam(requestParams, requestParamsToSanitize, res)
       if (shouldThrowErrorAfterValidatingRequestParams) {
-        return res.sendStatus(500)
+        return res.status(400).send("Dangerous input detected")
       }
 
       const {
         shouldThrowError: shouldThrowErrorAfterValidatingQueryParams = false
       } = validateGenericParam(queryParams,queryParamsToSanitize, res)
       if (shouldThrowErrorAfterValidatingQueryParams) {
-        return res.sendStatus(500)
+        return res.status(400).send("Dangerous input detected")
       }
 
       next()
@@ -90,4 +92,4 @@ const injectionSanitizer = (args = {}) => {
   }
 }
 
-module.exports = injectionSanitizer
+module.exports = injectionFireWallMiddleware

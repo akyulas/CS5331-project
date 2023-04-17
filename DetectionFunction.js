@@ -1,6 +1,5 @@
 const mongoDBNoSQLMatch = (input) => {
-  console.log(input)
-  console.log(typeof input)
+  console.log("validating with Mongo DB NOSQL Match")
   dangerousMongoDBNoSQLChars = ['$', '{', '&&', '||']
   dangerousRegex = [/sleep\([0-9]+\)/gm]
   return dangerousMongoDBNoSQLChars
@@ -10,4 +9,11 @@ const mongoDBNoSQLMatch = (input) => {
   .some(possiblyDangerousInput => input.match(possiblyDangerousInput))
 }
 
-module.exports = { mongoDBNoSQLMatch }
+const sqlInjectionMatch = (input) => {
+  console.log("validating with SQL Match")
+  dangerousSQLInectionChars = ['SELECT', 'UNION', '--', '1=1']
+  return dangerousSQLInectionChars
+  .some(possiblyDangerousInput => input.toUpperCase().includes(possiblyDangerousInput))
+}
+
+module.exports = { mongoDBNoSQLMatch, sqlInjectionMatch }

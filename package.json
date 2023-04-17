@@ -1,5 +1,5 @@
 {
-  "name": "injection-sanitizer",
+  "name": "injection-firewall-middleware",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
