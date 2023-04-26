@@ -27,8 +27,13 @@ const validateWithLRModel = ( input ) =>{
   // returns 1 or 0 
   const python_process = spawner('python', ['./identify.py', JSON.stringify( input )])
   python_process.stdout.on('data', (data) =>{
-    return data
+    dataToSend= data
   });
+  python_process.on('close', (code) => {
+    console.log(`${dataToSend}`);
+    // send data to browser
+    return dataToSend
+    });
 }
 
 const validateGenericParam = (param, paramsToSanitize) => {
@@ -92,4 +97,8 @@ const injectionFireWallMiddleware = (args = {}) => {
   }
 }
 
-module.exports = injectionFireWallMiddleware
+module.exports = 
+{
+  injectionFireWallMiddleware,
+  validateWithLRModel
+};
