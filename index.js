@@ -1,6 +1,6 @@
 const express = require('express')
 const { mongoDBNoSQLMatch, sqlInjectionMatch } = require('./DetectionFunction')
-const spawner = require('node:child_process').spawn;
+const spawner = require('node:child_process').spawnSync;
 
 const validateRequestBody = (requestBody, requestBodyPathsToSanitize, res) => {
   const result =  {}
@@ -24,16 +24,10 @@ const validateRequestBody = (requestBody, requestBodyPathsToSanitize, res) => {
 
 const validateWithLRModel = ( input ) =>{
   console.log("validating with LR Model")
-  // returns 1 or 0 
-  const python_process = spawner('python', ['./identify.py', JSON.stringify( input )])
-  python_process.stdout.on('data', (data) =>{
-    dataToSend= data
-  });
-  python_process.on('close', (code) => {
-    console.log(`${dataToSend}`);
-    // send data to browser
-    return dataToSend
-    });
+  const identifyFilePath = __dirname + '/identify.py'
+  const python_process = spawner('python3', [identifyFilePath, JSON.stringify( input )])
+  res = parseInt(python_process.stdout.toString())
+  return res
 }
 
 const validateGenericParam = (param, paramsToSanitize) => {
