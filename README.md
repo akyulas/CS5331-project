@@ -50,6 +50,8 @@ npm install
 node index.js
 ```
 
+The sample postman collection is provided as well: ExampleTestApp.postman_collection.json
+
 ## Pre-requisites
 
 This middleware was tested with the following python and node version:
