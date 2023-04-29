@@ -45,7 +45,7 @@ const injectionFireWallMiddleware = (args = {}) => {
   const {
     headersToSanitize = [],
     requestBodyPathsToSanitize = [],
-    requestParamsToSanitize = [],
+    pathParamsToSanitize = [],
     queryParamsToSanitize = [],
   } = args
   return (req, res, next) => {
@@ -54,7 +54,7 @@ const injectionFireWallMiddleware = (args = {}) => {
       const {
         headers: requestHeaders,
         body: requestBody,
-        params: requestParams,
+        params: pathParams,
         query: queryParams
       } = req
 
@@ -74,7 +74,7 @@ const injectionFireWallMiddleware = (args = {}) => {
 
       const {
         shouldThrowError: shouldThrowErrorAfterValidatingRequestParams = false
-      } = validateGenericParam(requestParams, requestParamsToSanitize, res)
+      } = validateGenericParam(pathParams, pathParamsToSanitize, res)
       if (shouldThrowErrorAfterValidatingRequestParams) {
         return res.status(400).send("Dangerous input detected")
       }
