@@ -1,0 +1,107 @@
+{
+	"info": {
+		"_postman_id": "7a0ee23e-a7a6-4a19-892d-61eb3b9b7299",
+		"name": "ExampleTestApp",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "get /",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "id",
+						"value": "{ \"$ne\" : -1 }",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5000/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get /test/:id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/test/{\"$ne\":-1}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"test",
+						"{\"$ne\":-1}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get /test?id=:id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/test?id={\"$ne\":-1}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"test"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "{\"$ne\":-1}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "post /test",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": { \"$ne\" : -1 }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/test",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"test"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
