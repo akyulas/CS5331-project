@@ -3,19 +3,19 @@ const app = express()
 const port = 5000
 const { injectionFireWallMiddleware } = require('injection-firewall-middleware')
 
-app.get('/', injectionFireWallMiddleware({headersToSanitize: ['id']}), (req, res) => {
+app.get('/', injectionFireWallMiddleware({headersToBeChecked: ['id']}), (req, res) => {
   res.send('In get /')
 })
 
-app.get('/test/:id', injectionFireWallMiddleware({pathParamsToSanitize: ['id']}), (req, res) => {
+app.get('/test/:id', injectionFireWallMiddleware({pathParamsToBeChecked: ['id']}), (req, res) => {
   res.send('In get /test/:id')
 })
 
-app.get('/test', injectionFireWallMiddleware({queryParamsToSanitize: ['id']}), (req, res) => {
+app.get('/test', injectionFireWallMiddleware({queryParamsToBeChecked: ['id']}), (req, res) => {
   res.send('In get /test')
 })
 
-app.post('/test', injectionFireWallMiddleware({requestBodyPathsToSanitize: ['id']}), (req, res) => {
+app.post('/test', injectionFireWallMiddleware({requestBodyPathsToBeChecked: ['id']}), (req, res) => {
   res.send('In post /test')
 })
 

@@ -37,10 +37,10 @@ const validateGenericParam = (param, paramsToSanitize) => {
 
 const injectionFireWallMiddleware = (args = {}) => {
   const {
-    headersToSanitize = [],
-    requestBodyPathsToSanitize = [],
-    pathParamsToSanitize = [],
-    queryParamsToSanitize = [],
+    headersToBeChecked = [],
+    requestBodyPathsToBeChecked = [],
+    pathParamsToBeChecked = [],
+    queryParamsToBeChecked = [],
   } = args
   return (req, res, next) => {
     express.json()(req, res, () => {
@@ -54,28 +54,28 @@ const injectionFireWallMiddleware = (args = {}) => {
 
       const {
         shouldThrowError: shouldThrowErrorAfterValidatingHeaders = false
-      } = validateGenericParam(requestHeaders, headersToSanitize, res)
+      } = validateGenericParam(requestHeaders, headersToBeChecked, res)
       if (shouldThrowErrorAfterValidatingHeaders) {
         return res.status(400).send("Dangerous input detected")
       }
 
       const {
         shouldThrowError: shouldThrowErrorAfterValidatingRequestBody = false
-      } = validateRequestBody(requestBody, requestBodyPathsToSanitize, res)
+      } = validateRequestBody(requestBody, requestBodyPathsToBeChecked, res)
       if (shouldThrowErrorAfterValidatingRequestBody) {
         return res.status(400).send("Dangerous input detected")
       }
 
       const {
         shouldThrowError: shouldThrowErrorAfterValidatingRequestParams = false
-      } = validateGenericParam(pathParams, pathParamsToSanitize, res)
+      } = validateGenericParam(pathParams, pathParamsToBeChecked, res)
       if (shouldThrowErrorAfterValidatingRequestParams) {
         return res.status(400).send("Dangerous input detected")
       }
 
       const {
         shouldThrowError: shouldThrowErrorAfterValidatingQueryParams = false
-      } = validateGenericParam(queryParams,queryParamsToSanitize, res)
+      } = validateGenericParam(queryParams,queryParamsToBeChecked, res)
       if (shouldThrowErrorAfterValidatingQueryParams) {
         return res.status(400).send("Dangerous input detected")
       }
